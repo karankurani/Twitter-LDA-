@@ -14,9 +14,9 @@ public class LDABase implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -530485173822375971L;
-	int minTokenCount = 1;
-	short numTopics = 15;
-	double topicPrior = 0.067;
+	int minTokenCount = 3;
+	short numTopics = 50;
+	double topicPrior = 0.02;
 	double wordPrior = 0.001;
 	public int burninEpochs = 100;
 	public int sampleLag = 1;
@@ -38,7 +38,7 @@ public class LDABase implements Serializable
 		.tokenizeDocuments(articleTexts,WORMBASE_TOKENIZER_FACTORY,symbolTable,minTokenCount);
 	}
 	
-	public void startEpochs(){
+	public void startEpochs() throws IOException{
 
 		System.out.println("Number of unique words above count threshold=" + symbolTable.numSymbols());
 
@@ -62,15 +62,16 @@ public class LDABase implements Serializable
 				handler);
 		lda = sample.lda();
 		int maxWordsPerTopic = 20;
-		int maxTopicsPerDoc = 10;
+		int maxTopicsPerDoc = 50;
 		boolean reportTokens = true;
-		handler.fullReport(sample,maxWordsPerTopic,maxTopicsPerDoc,reportTokens);
+//		handler.fullReport(sample,maxWordsPerTopic,maxTopicsPerDoc,reportTokens);
+		handler.fullMachineReport(sample, maxWordsPerTopic, numTopics, reportTokens);
 	}
 
 	public int[] getDocumentTokens(String docString){
-		docString = docString.substring(docString.indexOf("~"));
-		docString = docString.replaceAll("\\~", " ");
-		docString = docString.replaceAll("null", " ");
+//		docString = docString.substring(docString.indexOf("~"));
+//		docString = docString.replaceAll("\\~", " ");
+//		docString = docString.replaceAll("null", " ");
 		docString = docString.replaceAll("\\p{Punct}+", " ").trim();
 		int[] docTokens = LatentDirichletAllocation.tokenizeDocument(docString, 
 				WORMBASE_TOKENIZER_FACTORY, symbolTable);
@@ -84,9 +85,10 @@ public class LDABase implements Serializable
 			List<CharSequence> articleTextList = new ArrayList<CharSequence>(15000);
 
 			while((line = input.readLine()) != null){
-				line = line.substring(line.indexOf("~"));
-				line = line.replaceAll("\\~", " ");
-				line = line.replaceAll("null", " ");
+//				line = line.substring(line.indexOf("~"));
+//				line = line.replaceAll("\\~", " ");
+//				line = line.replaceAll("null", " ");
+				line = line.toLowerCase();
 				line = line.replaceAll("\\p{Punct}+", " ");
 				articleTextList.add(line);
 			}
