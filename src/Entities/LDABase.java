@@ -61,6 +61,10 @@ public class LDABase implements Serializable
 				new Random(randomSeed),
 				handler);
 		lda = sample.lda();
+		FileOutputStream fs = new FileOutputStream("C:/ALTData/ldaobject.obj");
+		ObjectOutputStream os = new ObjectOutputStream(fs);
+		os.writeObject(lda);
+		os.close();
 		int maxWordsPerTopic = 20;
 		int maxTopicsPerDoc = 50;
 		boolean reportTokens = true;
