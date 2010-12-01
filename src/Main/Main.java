@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -28,10 +30,10 @@ public class Main {
 	}
 	
 	private static void getBayesEstimate() throws IOException, ClassNotFoundException{
-		BufferedWriter bw = new BufferedWriter(new FileWriter("C:/ALTData/ExternalUserProbDistribution2.txt"));
-		LDABase lbase = new LDABase("C:/ALTData/linkTexts.txt");
-		BufferedReader br = new BufferedReader(new FileReader("C:/ALTData/fdata.txt"));
-		FileInputStream fr = new FileInputStream("C:/ALTData/ldaobject.obj");
+		BufferedWriter bw = new BufferedWriter(new FileWriter("C:/ALTData/ExternalUserProbDistribution4.txt"));
+		LDABase lbase = new LDABase("C:/ALTData/Train.txt");
+		BufferedReader br = new BufferedReader(new FileReader("C:/ALTData/TestIndians.txt"));
+		FileInputStream fr = new FileInputStream("C:/ALTData/ldaobject4.obj");
 		ObjectInputStream os = new ObjectInputStream(fr);
 		lbase.lda = (LatentDirichletAllocation) os.readObject();
 //		BufferedReader br2 = new BufferedReader(new FileReader("C:/ALTData/UserProbDistribution.txt"));
@@ -69,9 +71,10 @@ public class Main {
 		bw.flush();
 		bw.close();
 	}
+	
 	private static void getUserProbDistribution() throws IOException{
-		BufferedWriter bw = new BufferedWriter(new FileWriter("C:/ALTData/UserProbDistribution2.txt"));
-		LDABase lbase = new LDABase("C:/ALTData/linkTexts.txt");
+		BufferedWriter bw = new BufferedWriter(new FileWriter("C:/ALTData/UserProbDistribution4.txt"));
+		LDABase lbase = new LDABase("C:/ALTData/Train.txt");
 		lbase.startEpochs();
 		for(int i=0; i<lbase.sample.numDocuments(); i++){
             for(int j=0;j< lbase.sample.numTopics();j++){
@@ -81,6 +84,10 @@ public class Main {
         }
 		bw.flush();
 		bw.close();
+		FileOutputStream fs = new FileOutputStream("C:/ALTData/ldaobject4.obj");
+		ObjectOutputStream os = new ObjectOutputStream(fs);
+		os.writeObject(lbase.lda);
+		os.close();
 	}
 	private static void getLinks() throws IOException{
 		BufferedReader brTweets = new BufferedReader(new FileReader("C:/ALTData/Indians/Indians.txt"));
