@@ -27,11 +27,22 @@ public class Main {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 //		getUserProbDistribution();
 //		getBayesEstimate();
-		countUsers();
+		countAll();
 	}
-	private static void countUsers()throws IOException, ClassNotFoundException{
-		BufferedReader br = new BufferedReader(new FileReader("C:/ALTData/Run4/UserProbDistribution4.txt"));
-		BufferedWriter bw = new BufferedWriter(new FileWriter("C:/ALTData/UserCounts1/Run4TrainCount.txt"));
+	private static void countAll() throws IOException, ClassNotFoundException{
+		countUsers("C:/ALTData/Run4/ExternalUserProbDistribution4.txt", "C:/ALTData/UserCounts/Run4TestCount.txt");
+		countUsers("C:/ALTData/Run4/UserProbDistribution4.txt", "C:/ALTData/UserCounts/Run4TrainCount.txt");
+		countUsers("C:/ALTData/Port/UserProbDistributionPort.txt", "C:/ALTData/UserCounts/RunTrainPortCount.txt");
+		countUsers("C:/ALTData/Minn/UserProbDistributionMinn.txt", "C:/ALTData/UserCounts/RunTrainMinnCount.txt");
+		countUsers("C:/ALTData/Aus/UserProbDistributionAus.txt", "C:/ALTData/UserCounts/RunTrainAusCount.txt");
+		countUsers("C:/ALTData/RunXaa/UserProbDistributionXaa.txt", "C:/ALTData/UserCounts/RunTrainXaaCount.txt");
+		countUsers("C:/ALTData/XaaIndia/XaaProbForIndianModel.txt", "C:/ALTData/UserCounts/XaaIndianCount.txt");
+		countUsers("C:/ALTData/XaaPortland/XaaProbForPortlandModel.txt", "C:/ALTData/UserCounts/XaaPortCount.txt");
+		countUsers("C:/ALTData/XaaMinnesota/XaaProbForMinnesotaModel.txt", "C:/ALTData/UserCounts/XaaMinnCount.txt");
+	}
+	private static void countUsers(String readFile, String writeFile)throws IOException, ClassNotFoundException{
+		BufferedReader br = new BufferedReader(new FileReader(readFile));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile));
 		String line;
 		String[] splitS;
 		int numTopics =50;
@@ -53,26 +64,26 @@ public class Main {
 		}
 		
 		int countTopics = 0;
-		boolean allEqual = false;
-		double val = 0;
-		int valCount = 0; 
+//		boolean allEqual = false;
+//		double val = 0;
+//		int valCount = 0; 
 		for(int j=0; j<i; ++j){
 			countTopics = 0;
-			val = getMostFrequentValue(userProbDist[j]);
-			valCount=0;
+//			val = getMostFrequentValue(userProbDist[j]);
+//			valCount=0;
 			for(int k=0; k<numTopics;  ++k){
 				if(userProbDist[j][k]>=0.1){
-					if(val == userProbDist[j][k]){
-						++valCount;
-//						continue;
-					}
+//					if(val == userProbDist[j][k]){
+//						++valCount;
+////						continue;
+//					}
 					++countTopics;
 				}
 			}
-			if(valCount > 40 && countTopics > 40){
-				++userNumbers[countTopics - valCount];
-				continue;
-			}
+//			if(valCount > 40 && countTopics > 40){
+//				++userNumbers[countTopics - valCount];
+//				continue;
+//			}
 		
 			++userNumbers[countTopics];
 		}
