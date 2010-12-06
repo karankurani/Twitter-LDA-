@@ -27,9 +27,60 @@ public class Main {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 //		getUserProbDistribution();
 //		getBayesEstimate();
-		countAll();
+//		countAllUsers();
+		getTopicDistribution();
 	}
-	private static void countAll() throws IOException, ClassNotFoundException{
+	private static void getTopicDistribution() throws IOException {
+		topicDistribution("C:/ALTData/Run4/ExternalUserProbDistribution4.txt", "C:/ALTData/TopicDistributions/Run4TestTopicDist.txt");
+		topicDistribution("C:/ALTData/Run4/UserProbDistribution4.txt", "C:/ALTData/TopicDistributions/Run4TrainTopicDist.txt");
+		topicDistribution("C:/ALTData/Port/UserProbDistributionPort.txt", "C:/ALTData/TopicDistributions/RunTrainPortTopicDist.txt");
+		topicDistribution("C:/ALTData/Minn/UserProbDistributionMinn.txt", "C:/ALTData/TopicDistributions/RunTrainMinnTopicDist.txt");
+		topicDistribution("C:/ALTData/Aus/UserProbDistributionAus.txt", "C:/ALTData/TopicDistributions/RunTrainAusTopicDist.txt");
+		topicDistribution("C:/ALTData/RunXaa/UserProbDistributionXaa.txt", "C:/ALTData/TopicDistributions/RunTrainXaaTopicDist.txt");
+		topicDistribution("C:/ALTData/XaaIndia/XaaProbForIndianModel.txt", "C:/ALTData/TopicDistributions/XaaIndianTopicDist.txt");
+		topicDistribution("C:/ALTData/XaaPortland/XaaProbForPortlandModel.txt", "C:/ALTData/TopicDistributions/XaaPortTopicDist.txt");
+		topicDistribution("C:/ALTData/XaaMinnesota/XaaProbForMinnesotaModel.txt", "C:/ALTData/TopicDistributions/XaaMinnTopicDist.txt");
+	}
+	private static void topicDistribution(String readFile, String writeFile) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(readFile));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(writeFile));
+		String line;
+		String[] splitS;
+		int numTopics =50;
+		double[][] userProbDist = new double[150000][numTopics];
+		double[] topicNumbers = new double[numTopics];
+		int i=0;
+		while((line = br.readLine())!=null){
+			if ((line.contains("#"))){
+				for(int j=0; j<numTopics; ++j){
+					userProbDist[i][j] = 0;
+				}
+				continue;
+			}
+			splitS = line.split("\t");
+			for(int j=0; j<splitS.length; ++j){
+				userProbDist[i][j] = Double.parseDouble(splitS[j]);
+			}
+			++i;
+		}
+		
+		for(int j=0; j<i; ++j){
+			for(int k=0; k<numTopics;  ++k){
+				if(userProbDist[j][k]>=0.1){
+					++topicNumbers[k];
+				}
+			}
+		}
+		
+		for(int j=0; j<numTopics; ++j){
+			bw.write(topicNumbers[j]+"\n");
+		}
+		System.out.println(i);
+		bw.flush();
+		bw.close();
+		
+	}
+	private static void countAllUsers() throws IOException, ClassNotFoundException{
 		countUsers("C:/ALTData/Run4/ExternalUserProbDistribution4.txt", "C:/ALTData/UserCounts/Run4TestCount.txt");
 		countUsers("C:/ALTData/Run4/UserProbDistribution4.txt", "C:/ALTData/UserCounts/Run4TrainCount.txt");
 		countUsers("C:/ALTData/Port/UserProbDistributionPort.txt", "C:/ALTData/UserCounts/RunTrainPortCount.txt");
@@ -64,27 +115,13 @@ public class Main {
 		}
 		
 		int countTopics = 0;
-//		boolean allEqual = false;
-//		double val = 0;
-//		int valCount = 0; 
 		for(int j=0; j<i; ++j){
 			countTopics = 0;
-//			val = getMostFrequentValue(userProbDist[j]);
-//			valCount=0;
 			for(int k=0; k<numTopics;  ++k){
 				if(userProbDist[j][k]>=0.1){
-//					if(val == userProbDist[j][k]){
-//						++valCount;
-////						continue;
-//					}
 					++countTopics;
 				}
 			}
-//			if(valCount > 40 && countTopics > 40){
-//				++userNumbers[countTopics - valCount];
-//				continue;
-//			}
-		
 			++userNumbers[countTopics];
 		}
 		
